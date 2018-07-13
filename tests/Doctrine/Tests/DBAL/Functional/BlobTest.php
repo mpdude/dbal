@@ -55,6 +55,22 @@ class BlobTest extends \Doctrine\Tests\DbalFunctionalTestCase
         self::assertEquals(1, $ret);
     }
 
+    public function testInsertProcessesStream()
+    {
+        $this->_conn->insert('blob_table', [
+            'id'          => 1,
+            'blobfield'   => fopen('data://text/plain,test','r'),
+            'binaryfield' => fopen('data://text/plain,test','r'),
+        ], [
+            ParameterType::INTEGER,
+            ParameterType::LARGE_OBJECT,
+            ParameterType::LARGE_OBJECT,
+        ]);
+
+        $this->assertBlobContains('test');
+        $this->assertBinaryContains('test');
+    }
+
     public function testSelect()
     {
         $this->_conn->insert('blob_table', [
@@ -93,6 +109,32 @@ class BlobTest extends \Doctrine\Tests\DbalFunctionalTestCase
             ParameterType::LARGE_OBJECT,
             ParameterType::LARGE_OBJECT,
             ParameterType::INTEGER,
+        ]);
+
+        $this->assertBlobContains('test2');
+        $this->assertBinaryContains('test2');
+    }
+
+    public function testUpdateProcessesStream()
+    {
+        $this->_conn->insert('blob_table', [
+            'id' => 1,
+            'blobfield' => 'test',
+            'binaryfield' => 'test',
+        ], [
+            ParameterType::INTEGER,
+            ParameterType::LARGE_OBJECT,
+            ParameterType::LARGE_OBJECT,
+        ]);
+
+        $this->_conn->update('blob_table', [
+            'id'          => 1,
+            'blobfield'   => fopen('data://text/plain,test2','r'),
+            'binaryfield' => fopen('data://text/plain,test2','r'),
+        ], ['id' => 1], [
+            ParameterType::INTEGER,
+            ParameterType::LARGE_OBJECT,
+            ParameterType::LARGE_OBJECT,
         ]);
 
         $this->assertBlobContains('test2');
