@@ -57,6 +57,10 @@ class BlobTest extends \Doctrine\Tests\DbalFunctionalTestCase
 
     public function testInsertProcessesStream()
     {
+        if (! $this->_conn->getDriver() instanceof \Doctrine\DBAL\Driver\Mysqli\Driver) {
+            $this->markTestSkipped('Passing streams into insert() is supported in MySQLi only');
+        }
+
         $this->_conn->insert('blob_table', [
             'id'          => 1,
             'blobfield'   => fopen('data://text/plain,test','r'),
@@ -117,6 +121,10 @@ class BlobTest extends \Doctrine\Tests\DbalFunctionalTestCase
 
     public function testUpdateProcessesStream()
     {
+        if (! $this->_conn->getDriver() instanceof \Doctrine\DBAL\Driver\Mysqli\Driver) {
+            $this->markTestSkipped('Passing streams into update() is supported in MySQLi only');
+        }
+
         $this->_conn->insert('blob_table', [
             'id' => 1,
             'blobfield' => 'test',
