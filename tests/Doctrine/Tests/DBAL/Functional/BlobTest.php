@@ -57,8 +57,9 @@ class BlobTest extends \Doctrine\Tests\DbalFunctionalTestCase
 
     public function testInsertProcessesStream()
     {
-        if (! $this->_conn->getDriver() instanceof \Doctrine\DBAL\Driver\Mysqli\Driver) {
-            $this->markTestSkipped('Passing streams into insert() is supported in MySQLi only');
+        if (! $this->_conn->getDriver() instanceof \Doctrine\DBAL\Driver\Mysqli\Driver
+            && ! $this->_conn->getDriver() instanceof \Doctrine\DBAL\Driver\PDOMySql\Driver) {
+            $this->markTestSkipped('Passing streams into insert() is supported in Mysqli and PDOMySql only');
         }
 
         $this->_conn->insert('blob_table', [
@@ -123,8 +124,9 @@ class BlobTest extends \Doctrine\Tests\DbalFunctionalTestCase
 
     public function testUpdateProcessesStream()
     {
-        if (! $this->_conn->getDriver() instanceof \Doctrine\DBAL\Driver\Mysqli\Driver) {
-            $this->markTestSkipped('Passing streams into update() is supported in MySQLi only');
+        if (! $this->_conn->getDriver() instanceof \Doctrine\DBAL\Driver\Mysqli\Driver
+            && ! $this->_conn->getDriver() instanceof \Doctrine\DBAL\Driver\PDOMySql\Driver) {
+            $this->markTestSkipped('Passing streams into update() is supported in Mysqli and PDOMySql only');
         }
 
         $this->_conn->insert('blob_table', [
