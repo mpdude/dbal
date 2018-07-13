@@ -63,10 +63,12 @@ class BlobTest extends \Doctrine\Tests\DbalFunctionalTestCase
 
         $this->_conn->insert('blob_table', [
             'id'          => 1,
+            'clobfield'   => 'ignored',
             'blobfield'   => fopen('data://text/plain,test','r'),
             'binaryfield' => fopen('data://text/plain,test','r'),
         ], [
             ParameterType::INTEGER,
+            ParameterType::STRING,
             ParameterType::LARGE_OBJECT,
             ParameterType::LARGE_OBJECT,
         ]);
@@ -126,11 +128,13 @@ class BlobTest extends \Doctrine\Tests\DbalFunctionalTestCase
         }
 
         $this->_conn->insert('blob_table', [
-            'id' => 1,
-            'blobfield' => 'test',
+            'id'          => 1,
+            'clobfield'   => 'ignored',
+            'blobfield'   => 'test',
             'binaryfield' => 'test',
         ], [
             ParameterType::INTEGER,
+            ParameterType::STRING,
             ParameterType::LARGE_OBJECT,
             ParameterType::LARGE_OBJECT,
         ]);
