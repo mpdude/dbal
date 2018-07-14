@@ -6,8 +6,9 @@ use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Types\Type;
 use const CASE_LOWER;
 use function array_change_key_case;
-use function stream_get_contents;
 use function fopen;
+use function str_repeat;
+use function stream_get_contents;
 
 /**
  * @group DBAL-6

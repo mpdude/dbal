@@ -27,11 +27,11 @@ use function array_combine;
 use function array_fill;
 use function call_user_func_array;
 use function count;
-use function str_repeat;
-use function is_resource;
-use function get_resource_type;
 use function feof;
 use function fread;
+use function get_resource_type;
+use function is_resource;
+use function str_repeat;
 
 /**
  * @author Kim Hemsø Rasmussen <kimhemsoe@gmail.com>
