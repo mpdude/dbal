@@ -28,6 +28,10 @@ use function array_fill;
 use function call_user_func_array;
 use function count;
 use function str_repeat;
+use function is_resource;
+use function get_resource_type;
+use function feof;
+use function fread;
 
 /**
  * @author Kim Hemsø Rasmussen <kimhemsoe@gmail.com>
@@ -86,9 +90,9 @@ class MysqliStatement implements \IteratorAggregate, Statement
      * Contains values from bindValue() that need to be sent
      * using send_long_data *after* bind_param has been called.
      *
-     * @var array
+     * @var mixed[]
      */
-    protected $_longData = array();
+    protected $_longData = [];
 
     /**
      * @var int
@@ -149,9 +153,9 @@ class MysqliStatement implements \IteratorAggregate, Statement
      */
     public function bindValue($param, $value, $type = ParameterType::STRING)
     {
-        if ($type == ParameterType::LARGE_OBJECT) {
+        if ($type === ParameterType::LARGE_OBJECT) {
             $this->_longData[$param - 1] = $value;
-            $value = null;
+            $value                       = null;
         }
 
         if (null === $type) {
@@ -248,15 +252,15 @@ class MysqliStatement implements \IteratorAggregate, Statement
     private function _sendLongData()
     {
         foreach ($this->_longData as $paramNr => $resource) {
-            if (is_resource($resource) && get_resource_type($resource) == 'stream') {
-                while (!feof($resource)) {
+            if (is_resource($resource) && get_resource_type($resource) === 'stream') {
+                while (! feof($resource)) {
                     $longData = fread($resource, 8192);
-                    if (!$this->_stmt->send_long_data($paramNr, $longData)) {
+                    if (! $this->_stmt->send_long_data($paramNr, $longData)) {
                         throw new MysqliException($this->_stmt->error, $this->_stmt->sqlstate, $this->_stmt->errno);
                     }
                 }
             } else {
-                if (!$this->_stmt->send_long_data($paramNr, $resource)) {
+                if (! $this->_stmt->send_long_data($paramNr, $resource)) {
                     throw new MysqliException($this->_stmt->error, $this->_stmt->sqlstate, $this->_stmt->errno);
                 }
             }

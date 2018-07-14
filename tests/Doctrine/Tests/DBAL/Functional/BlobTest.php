@@ -7,6 +7,7 @@ use Doctrine\DBAL\Types\Type;
 use const CASE_LOWER;
 use function array_change_key_case;
 use function stream_get_contents;
+use function fopen;
 
 /**
  * @group DBAL-6
@@ -65,8 +66,8 @@ class BlobTest extends \Doctrine\Tests\DbalFunctionalTestCase
         $this->_conn->insert('blob_table', [
             'id'          => 1,
             'clobfield'   => 'ignored',
-            'blobfield'   => fopen('data://text/plain,test','r'),
-            'binaryfield' => fopen('data://text/plain,test','r'),
+            'blobfield'   => fopen('data://text/plain,test', 'r'),
+            'binaryfield' => fopen('data://text/plain,test', 'r'),
         ], [
             ParameterType::INTEGER,
             ParameterType::STRING,
@@ -143,8 +144,8 @@ class BlobTest extends \Doctrine\Tests\DbalFunctionalTestCase
 
         $this->_conn->update('blob_table', [
             'id'          => 1,
-            'blobfield'   => fopen('data://text/plain,test2','r'),
-            'binaryfield' => fopen('data://text/plain,test2','r'),
+            'blobfield'   => fopen('data://text/plain,test2', 'r'),
+            'binaryfield' => fopen('data://text/plain,test2', 'r'),
         ], ['id' => 1], [
             ParameterType::INTEGER,
             ParameterType::LARGE_OBJECT,
