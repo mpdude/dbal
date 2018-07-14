@@ -79,6 +79,30 @@ class BlobTest extends \Doctrine\Tests\DbalFunctionalTestCase
         $this->assertBinaryContains('test');
     }
 
+    public function testInsertCanHandleStreamLongerThanChunkSize()
+    {
+        if (! $this->_conn->getDriver() instanceof \Doctrine\DBAL\Driver\Mysqli\Driver
+            && ! $this->_conn->getDriver() instanceof \Doctrine\DBAL\Driver\PDOMySql\Driver) {
+            $this->markTestSkipped('Passing streams into insert() is supported in Mysqli and PDOMySql only');
+        }
+
+        $longBlob = str_repeat('x', 40000);
+
+        $this->_conn->insert('blob_table', [
+            'id'          => 1,
+            'clobfield'   => 'ignored',
+            'blobfield'   => fopen('data://text/plain,' . $longBlob, 'r'),
+            'binaryfield' => 'ignored',
+        ], [
+            ParameterType::INTEGER,
+            ParameterType::STRING,
+            ParameterType::LARGE_OBJECT,
+            ParameterType::LARGE_OBJECT,
+        ]);
+
+        $this->assertBlobContains($longBlob);
+    }
+
     public function testSelect()
     {
         $this->_conn->insert('blob_table', [
